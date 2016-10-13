@@ -8,9 +8,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.facebook.login.LoginManager;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.ratemystyle.rate_my_style.fragment.CameraFragment;
 import com.ratemystyle.rate_my_style.fragment.MainFragment;
 import com.ratemystyle.rate_my_style.fragment.ProfileFragment;
@@ -18,46 +15,17 @@ import com.ratemystyle.rate_my_style.fragment.ProfileFragment;
 import static com.ratemystyle.rate_my_style.R.id.pager;
 
 public class MainActivity extends FragmentActivity {
-    /**
-     * The number of pages (wizard steps) to show in this demo.
-     */
     private static final int NUM_PAGES = 3;
-
-    /**
-     * The pager widget, which handles animation and allows swiping horizontally to access previous
-     * and next wizard steps.
-     */
-    ViewPager mPager;
-
-    /**
-     * The pager adapter, which provides the pages to the view pager widget.
-     */
-    // private PagerAdapter mPagerAdapter;
-
+    private ViewPager mPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Instantiate a ViewPager and a PagerAdapter.
-        //https://developer.android.com/training/animation/screen-slide.html
-        // http://stackoverflow.com/questions/18413309/how-to-implement-a-viewpager-with-different-fragments-layouts/18413437#18413437
         PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(pager);
         mPager.setAdapter(mPagerAdapter);
-
-        FirebaseUser user = mAuth.getCurrentUser();
-        ((TextView)findViewById(R.id.textView)).setText(user.getEmail());
-
-        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-                LoginManager.getInstance().logOut();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            }
-        });
     }
 
     @Override
