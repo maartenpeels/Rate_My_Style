@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "224268852350",
+    "firebase_url": "https://ratemystyle-99fce.firebaseio.com",
+    "project_id": "ratemystyle-99fce",
+    "storage_bucket": "ratemystyle-99fce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:224268852350:android:30ec454f3da98235",
+        "android_client_info": {
+          "package_name": "com.ratemystyle.rate_my_style"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "224268852350-pppli8nmm8hhvpv9l7kpleov2lv9vsva.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3vu30Wezkos_PjBYyrPduZd_ctYd5WWY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

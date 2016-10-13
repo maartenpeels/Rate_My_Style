@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name" translatable="false">Do you like my style?</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_login">Sign In</string>
+    <string name="btn_forgot_password">Forgot your password?</string>
+    <string name="btn_link_to_register">Not a member? Register now!</string>
+    <string name="minimum_password_length">Password too short, enter minimum 6 characters!</string>
+    <string name="auth_failed">Authentication failed, did you activate your account?</string>
+</resources>

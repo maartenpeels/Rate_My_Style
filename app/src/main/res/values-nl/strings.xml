@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="btn_forgot_password">Wachtwoord vergeten?</string>
+    <string name="btn_link_to_register">Geen lid? Registreer nu!</string>
+    <string name="btn_login">Login</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Wachtwoord</string>
+    <string name="minimum_password_length">Wachtwoord moet minimaal 6 tekens bevatten!</string>
+    <string name="auth_failed">Inloggen mislukt, vergeten uw account te activeren?</string>
+</resources>
