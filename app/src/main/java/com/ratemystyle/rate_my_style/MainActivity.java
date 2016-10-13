@@ -37,18 +37,13 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         // Instantiate a ViewPager and a PagerAdapter.
         //https://developer.android.com/training/animation/screen-slide.html
         // http://stackoverflow.com/questions/18413309/how-to-implement-a-viewpager-with-different-fragments-layouts/18413437#18413437
-        //  mPager = (ViewPager) findViewById(R.id.pager);
         PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(pager);
         mPager.setAdapter(mPagerAdapter);
 
-//        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
-//        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-//        mPager.setAdapter(mPagerAdapter);
     }
 
     @Override
@@ -77,7 +72,6 @@ public class MainActivity extends FragmentActivity {
                     return CameraFragment.newInstance("CameraFragment, Instance 1");
                 case 1:
                     return ProfileFragment.newInstance("ProfileFragment, Instance 1");
-                //case 2: return MainFragment.newInstance("MainFragment, Instance 1");
 
                 default:
                     return MainFragment.newInstance("MainFragment, Default");
