@@ -12,4 +12,10 @@
     <string name="btn_link_to_login">Al een account? Log in!</string>
     <string name="enter_email">Voer email adres in!</string>
     <string name="enter_password">Voer wachtwoord in!</string>
+    <string name="btn_reset_password">Reset wachtwoord</string>
+    <string name="enter_registered_email">Voer het email adres in waarmee u heeft geregistreerd</string>
+    <string name="forgot_password_msg">We hebben alleen uw email nodig om wachtwoord reset instructies te sturen.</string>
+    <string name="lbl_forgot_password">Wactwoord vergeten?</string>
+    <string name="password_reset_instructions">We hebben u een email met instructies gestuurd!</string>
+    <string name="reset_emailsend_fail">email met instructies versturen mislukt!</string>
 </resources>

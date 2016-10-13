@@ -7,8 +7,15 @@
     <string name="btn_link_to_register">Not a member? Register now!</string>
     <string name="minimum_password_length">Password too short, enter minimum 6 characters!</string>
     <string name="auth_failed">Authentication failed, did you activate your account?</string>
-    <string name="enter_password">Enter Password!</string>
+    <string name="enter_password">Enter password!</string>
     <string name="enter_email">Enter email address!</string>
     <string name="btn_link_to_login">Already registered. Sign me in!</string>
     <string name="action_sign_in_short" >Register</string>
+    <string name="lbl_forgot_password">Forgot password?</string>
+    <string name="forgot_password_msg">We just need your email to sent you password reset instructions.</string>
+    <string name="btn_reset_password">Reset password</string>
+    <string name="btn_back" translatable="false"><![CDATA[<< Back]]></string>
+    <string name="enter_registered_email">Enter the email you registered with</string>
+    <string name="password_reset_instructions">We have sent you instructions to reset your password!</string>
+    <string name="reset_emailsend_fail">Failed to send password reset email!</string>
 </resources>
