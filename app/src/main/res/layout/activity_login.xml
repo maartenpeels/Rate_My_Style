@@ -4,8 +4,8 @@
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context="com.ratemystyle.rate_my_style.LoginActivity">
 
     <LinearLayout
@@ -24,9 +24,9 @@
             android:src="@mipmap/ic_launcher"/>
 
         <EditText
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/email"
             android:layout_marginBottom="10dp"
             android:hint="@string/hint_email"
             android:inputType="textEmailAddress"
@@ -34,9 +34,9 @@
             android:textColorHint="@android:color/white"/>
 
         <EditText
+            android:id="@+id/password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/password"
             android:layout_marginBottom="10dp"
             android:hint="@string/hint_password"
             android:inputType="textPassword"
@@ -44,18 +44,26 @@
             android:textColorHint="@android:color/white"/>
 
         <Button
+            android:id="@+id/btn_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_login"
             android:layout_marginTop="20dip"
             android:background="@color/colorAccent"
             android:text="@string/btn_login"
             android:textColor="@android:color/black"/>
 
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/btn_fb_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp" />
+
         <Button
+            android:id="@+id/btn_reset_password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_reset_password"
             android:layout_marginTop="20dip"
             android:background="@null"
             android:text="@string/btn_forgot_password"
@@ -63,9 +71,9 @@
             android:textColor="@color/colorAccent"/>
 
         <Button
+            android:id="@+id/btn_signup"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_signup"
             android:layout_marginTop="20dip"
             android:background="@null"
             android:text="@string/btn_link_to_register"
@@ -75,9 +83,9 @@
     </LinearLayout>
 
     <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:id="@+id/progressBar"
         android:layout_gravity="center|bottom"
         android:layout_marginBottom="20dp"
         android:visibility="gone"/>

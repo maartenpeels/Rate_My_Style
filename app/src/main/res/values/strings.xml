@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Do you like my style?</string>
+    <string name="facebook_app_id" translatable="false">1139940946087783</string>
+
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="btn_login">Sign In</string>
@@ -18,4 +20,6 @@
     <string name="enter_registered_email">Enter the email you registered with</string>
     <string name="password_reset_instructions">We have sent you instructions to reset your password!</string>
     <string name="reset_emailsend_fail">Failed to send password reset email!</string>
+    <string name="btn_fb_login">Sign in with Facebook</string>
+    <string name="email_collision">A user with this email already exists</string>
 </resources>
