@@ -7,4 +7,9 @@
     <string name="hint_password">Wachtwoord</string>
     <string name="minimum_password_length">Wachtwoord moet minimaal 6 tekens bevatten!</string>
     <string name="auth_failed">Inloggen mislukt, vergeten uw account te activeren?</string>
+    <string name="action_sign_in_short">Registreer</string>
+    <string name="app_name" translatable="false"></string>
+    <string name="btn_link_to_login">Al een account? Log in!</string>
+    <string name="enter_email">Voer email adres in!</string>
+    <string name="enter_password">Voer wachtwoord in!</string>
 </resources>

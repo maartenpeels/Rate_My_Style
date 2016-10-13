@@ -7,4 +7,8 @@
     <string name="btn_link_to_register">Not a member? Register now!</string>
     <string name="minimum_password_length">Password too short, enter minimum 6 characters!</string>
     <string name="auth_failed">Authentication failed, did you activate your account?</string>
+    <string name="enter_password">Enter Password!</string>
+    <string name="enter_email">Enter email address!</string>
+    <string name="btn_link_to_login">Already registered. Sign me in!</string>
+    <string name="action_sign_in_short" >Register</string>
 </resources>
