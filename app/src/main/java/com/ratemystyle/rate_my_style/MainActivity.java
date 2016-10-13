@@ -1,38 +1,94 @@
 package com.ratemystyle.rate_my_style;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.TextView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.ratemystyle.rate_my_style.fragment.CameraFragment;
+import com.ratemystyle.rate_my_style.fragment.MainFragment;
+import com.ratemystyle.rate_my_style.fragment.ProfileFragment;
 
-public class MainActivity extends AppCompatActivity {
+import static com.ratemystyle.rate_my_style.R.id.pager;
+
+public class MainActivity extends FragmentActivity {
+    /**
+     * The number of pages (wizard steps) to show in this demo.
+     */
+    private static final int NUM_PAGES = 3;
+
+    /**
+     * The pager widget, which handles animation and allows swiping horizontally to access previous
+     * and next wizard steps.
+     */
+    ViewPager mPager;
+
+    /**
+     * The pager adapter, which provides the pages to the view pager widget.
+     */
+    // private PagerAdapter mPagerAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final FirebaseAuth mAuth;
-        mAuth = FirebaseAuth.getInstance();
 
-        FirebaseUser user = mAuth.getCurrentUser();
-        ((TextView)findViewById(R.id.textView)).setText(user.getEmail());
+        // Instantiate a ViewPager and a PagerAdapter.
+        //https://developer.android.com/training/animation/screen-slide.html
+        // http://stackoverflow.com/questions/18413309/how-to-implement-a-viewpager-with-different-fragments-layouts/18413437#18413437
+        //  mPager = (ViewPager) findViewById(R.id.pager);
+        PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager = (ViewPager) findViewById(pager);
+        mPager.setAdapter(mPagerAdapter);
 
-        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            }
-        });
+//        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
+//        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+//        mPager.setAdapter(mPagerAdapter);
     }
 
     @Override
     public void onBackPressed() {
-        // Block back button, Use sign out button to go back to sinInActivity
+        //TODO if previous is login block backPressed
+//        if (mPager.getCurrentItem() == 0) {
+//            // If the user is currently looking at the first step, allow the system to handle the
+//            // Back button. This calls finish() on this activity and pops the back stack.
+//            mPager.setCurrentItem(1);
+//        } else {
+//            // Otherwise, select the previous step.
+//            super.onBackPressed();
+//        }
+    }
+
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int pos) {
+            switch (pos) {
+
+                case 0:
+                    return CameraFragment.newInstance("CameraFragment, Instance 1");
+                case 1:
+                    return ProfileFragment.newInstance("ProfileFragment, Instance 1");
+                //case 2: return MainFragment.newInstance("MainFragment, Instance 1");
+
+                default:
+                    return MainFragment.newInstance("MainFragment, Default");
+            }
+        }
+
+
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
     }
 }
+
