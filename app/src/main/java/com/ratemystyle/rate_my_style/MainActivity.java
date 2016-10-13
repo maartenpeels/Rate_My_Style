@@ -1,10 +1,9 @@
 package com.ratemystyle.rate_my_style;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,5 +29,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Block back button, Use sign out button to go back to sinInActivity
     }
 }

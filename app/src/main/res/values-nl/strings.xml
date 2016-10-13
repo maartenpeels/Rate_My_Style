@@ -18,4 +18,5 @@
     <string name="lbl_forgot_password">Wactwoord vergeten?</string>
     <string name="password_reset_instructions">We hebben u een email met instructies gestuurd!</string>
     <string name="reset_emailsend_fail">email met instructies versturen mislukt!</string>
+    <string name="btn_back"><![CDATA[<< Terug]]></string>
 </resources>

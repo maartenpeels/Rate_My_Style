@@ -14,7 +14,7 @@
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="forgot_password_msg">We just need your email to sent you password reset instructions.</string>
     <string name="btn_reset_password">Reset password</string>
-    <string name="btn_back" translatable="false"><![CDATA[<< Back]]></string>
+    <string name="btn_back"><![CDATA[<< Back]]></string>
     <string name="enter_registered_email">Enter the email you registered with</string>
     <string name="password_reset_instructions">We have sent you instructions to reset your password!</string>
     <string name="reset_emailsend_fail">Failed to send password reset email!</string>
