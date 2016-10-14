@@ -8,7 +8,6 @@
     <string name="minimum_password_length">Wachtwoord moet minimaal 6 tekens bevatten!</string>
     <string name="auth_failed">Inloggen mislukt, vergeten uw account te activeren?</string>
     <string name="action_sign_in_short">Registreer</string>
-    <string name="app_name" translatable="false">Do you like my style?</string>
     <string name="btn_link_to_login">Al een account? Log in!</string>
     <string name="enter_email">Voer email adres in!</string>
     <string name="enter_password">Voer wachtwoord in!</string>
@@ -21,4 +20,15 @@
     <string name="btn_back"><![CDATA[<< Terug]]></string>
     <string name="btn_fb_login">Log in met Facebook</string>
     <string name="startCamera">Nieuwe foto</string>
+    <string name="btn_sign_out">Log uit</string>
+    <string name="email_collision">Er bestaat al een gebruiker met dit email adres!</string>
+    <string name="pref_description_social_recommendations">Aanbevolen personen om te volgen</string>
+    <string name="pref_header_general">Algemeen</string>
+    <string name="pref_header_notifications">Notificaties</string>
+    <string name="pref_title_new_message_notifications">New bericht notificaties</string>
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_title_social_recommendations">Zet sociale aanbevelingen aan</string>
+    <string name="pref_title_vibrate">Trillen</string>
+    <string name="title_activity_settings">Instellingen</string>
+    <string name="pref_ringtone_silent">Stil</string>
 </resources>
