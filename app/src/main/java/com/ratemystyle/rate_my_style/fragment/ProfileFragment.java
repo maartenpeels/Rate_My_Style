@@ -2,9 +2,8 @@ package com.ratemystyle.rate_my_style.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -115,7 +112,6 @@ public class ProfileFragment extends Fragment {
                 fName.setText(profile.firstName);
                 lName.setText(profile.lastName);
                 age.setText(profile.age + "");
-                Toast.makeText(getContext(), "User change: " + profile.firstName, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -124,15 +120,10 @@ public class ProfileFragment extends Fragment {
             }
         };
 
-        profilePicRef.child(uid + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        profilePicRef.child(uid + ".jpg").getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
-            public void onSuccess(Uri uri) {
-                imageView.setImageURI(uri);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Log.w(TAG, "loadImage:onFailure", exception);
+            public void onSuccess(byte[] bytes) {
+                imageView.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
             }
         });
 
