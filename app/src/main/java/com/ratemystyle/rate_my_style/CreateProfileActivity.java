@@ -3,11 +3,9 @@ package com.ratemystyle.rate_my_style;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 public class CreateProfileActivity extends AppCompatActivity {
 
@@ -67,7 +66,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                 int age = Integer.parseInt(((EditText) findViewById(R.id.age)).getText().toString());
                 ImageView view = (ImageView) findViewById(R.id.img_profile);
 
-                if (Database.saveProfile(uid, fName, lName, age, view)) {
+                if (Database.saveProfile(uid, fName, lName, age, ((BitmapDrawable) view.getDrawable()).getBitmap())) {
                     startActivity(new Intent(CreateProfileActivity.this, MainActivity.class));
                     progressBar.setVisibility(View.INVISIBLE);
                     finish();
@@ -82,18 +81,17 @@ public class CreateProfileActivity extends AppCompatActivity {
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
+            CropImage.activity(selectedImage)
+                    .setAspectRatio(1, 1).setFixAspectRatio(true)
+                    .start(this);
 
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
 
-            ImageView imageView = (ImageView) findViewById(R.id.img_profile);
-            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                ((ImageView) findViewById(R.id.img_profile)).setImageURI(result.getUri());
+            }
         }
     }
 

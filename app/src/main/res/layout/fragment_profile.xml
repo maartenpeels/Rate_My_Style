@@ -10,15 +10,13 @@
     android:weightSum="1"
     tools:context="com.ratemystyle.rate_my_style.CreateProfileActivity">
 
-    <com.github.siyamed.shapeimageview.CircularImageView
+    <ImageView
         android:id="@+id/profilePic"
         android:layout_width="170dp"
         android:layout_height="170dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        app:siBorderColor="@color/colorAccent"
-        app:siBorderWidth="4dp"
-        app:srcCompat="@drawable/com_facebook_profile_picture_blank_square" />
+        app:srcCompat="@mipmap/ic_launcher" />
 
     <LinearLayout
         android:layout_width="fill_parent"

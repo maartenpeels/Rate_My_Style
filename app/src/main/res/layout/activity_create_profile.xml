@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_create_profile"
     android:layout_width="match_parent"
@@ -10,23 +11,32 @@
     android:weightSum="1"
     tools:context="com.ratemystyle.rate_my_style.CreateProfileActivity">
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/press_image_to_select_a_profile_picture"
+        android:textAlignment="center" />
+
+    <ImageView
+        android:id="@+id/img_profile"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30dp"
+
+        android:scaleType="centerCrop"
+        app:srcCompat="@mipmap/ic_launcher" />
+
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="455dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.69"
         android:background="@color/colorPrimary"
-        android:gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin"
         android:weightSum="1">
-
-        <ImageView
-            android:id="@+id/img_profile"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="30dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher" />
 
         <EditText
             android:id="@+id/fName"
@@ -70,7 +80,7 @@
     <Button
         android:id="@+id/btn_createprofile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:background="@color/colorAccent"
         android:text="@string/save"
         android:textColor="@android:color/black" />

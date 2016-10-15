@@ -36,6 +36,7 @@
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
     <string name="age">Age</string>
+    <string name="press_image_to_select_a_profile_picture">Press image to select a profile picture!</string>
 
 
 </resources>
