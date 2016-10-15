@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +36,6 @@ import com.ratemystyle.rate_my_style.R;
 public class ProfileFragment extends Fragment {
     static final int USER_CREATED_PROFILE = 101;
     private static final String TAG = "ProfileFragment";
-    LinearLayout layout;
     private TextView fName;
     private TextView lName;
     private TextView age;
@@ -60,9 +58,6 @@ public class ProfileFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_profile, container, false);
 
-        layout = (LinearLayout) inflater.inflate(R.layout.fragment_profile,
-                container, false);
-
         checkProfile();
 
         return rootView;
@@ -73,7 +68,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (!snapshot.exists()) {
-                    startActivityForResult(new Intent(layout.getContext(), CreateProfileActivity.class), USER_CREATED_PROFILE);
+                    startActivityForResult(new Intent(getView().getContext(), CreateProfileActivity.class), USER_CREATED_PROFILE);
                 } else {
                     startListening();
                 }
@@ -100,14 +95,14 @@ public class ProfileFragment extends Fragment {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
-        ((TextView) layout.findViewById(R.id.tb_uid)).setText(uid);
-        ((TextView) layout.findViewById(R.id.tb_email)).setText(email);
+        ((TextView) getView().findViewById(R.id.tb_uid)).setText(uid);
+        ((TextView) getView().findViewById(R.id.tb_email)).setText(email);
 
-        fName = (TextView) layout.findViewById(R.id.tb_fname);
-        lName = (TextView) layout.findViewById(R.id.tb_lname);
-        age = (TextView) layout.findViewById(R.id.tb_age);
+        fName = (TextView) getView().findViewById(R.id.tb_fname);
+        lName = (TextView) getView().findViewById(R.id.tb_lname);
+        age = (TextView) getView().findViewById(R.id.tb_age);
 
-        imageView = (ImageView) layout.findViewById(R.id.img_pf);
+        imageView = (ImageView) getView().findViewById(R.id.img_pf);
 
         DatabaseReference mPostReference = FirebaseDatabase.getInstance().getReference().child("profiles").child(uid);
         StorageReference profilePicRef = FirebaseStorage.getInstance().getReference().child("profilePics");
