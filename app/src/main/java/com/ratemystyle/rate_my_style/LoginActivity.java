@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressBar.setVisibility(View.GONE);
+                                progressBar.setVisibility(View.INVISIBLE);
                                 if (!task.isSuccessful()) {
                                     if (password.length() < 6) {
                                         inputPassword.setError(getString(R.string.minimum_password_length));

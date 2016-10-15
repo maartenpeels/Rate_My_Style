@@ -33,9 +33,7 @@ import com.ratemystyle.rate_my_style.R;
 public class ProfileFragment extends Fragment {
     static final int USER_CREATED_PROFILE = 101;
     private static final String TAG = "ProfileFragment";
-    private TextView fName;
-    private TextView lName;
-    private TextView age;
+    private TextView name;
     private ImageView imageView;
 
     public static ProfileFragment newInstance(String text) {
@@ -88,18 +86,13 @@ public class ProfileFragment extends Fragment {
     }
 
     public void startListening() {
-        ///Testing realtime db
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
-        ((TextView) getView().findViewById(R.id.tb_uid)).setText(uid);
         ((TextView) getView().findViewById(R.id.tb_email)).setText(email);
 
-        fName = (TextView) getView().findViewById(R.id.tb_fname);
-        lName = (TextView) getView().findViewById(R.id.tb_lname);
-        age = (TextView) getView().findViewById(R.id.tb_age);
-
-        imageView = (ImageView) getView().findViewById(R.id.img_pf);
+        name = (TextView) getView().findViewById(R.id.tb_name);
+        imageView = (ImageView) getView().findViewById(R.id.profilePic);
 
         DatabaseReference mPostReference = FirebaseDatabase.getInstance().getReference().child("profiles").child(uid);
         StorageReference profilePicRef = FirebaseStorage.getInstance().getReference().child("profilePics");
@@ -109,9 +102,8 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Profile profile = dataSnapshot.getValue(Profile.class);
 
-                fName.setText(profile.firstName);
-                lName.setText(profile.lastName);
-                age.setText(profile.age + "");
+                String nameS = profile.firstName + " " + profile.lastName + " - " + profile.age;
+                name.setText(nameS);
             }
 
             @Override
@@ -128,6 +120,5 @@ public class ProfileFragment extends Fragment {
         });
 
         mPostReference.addValueEventListener(postListener);
-        //end testing realtime db
     }
 }

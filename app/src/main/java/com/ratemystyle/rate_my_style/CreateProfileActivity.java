@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -57,6 +58,9 @@ public class CreateProfileActivity extends AppCompatActivity {
         findViewById(R.id.btn_createprofile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
+                ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar2);
+                progressBar.setVisibility(View.VISIBLE);
+
                 String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 String fName = ((EditText) findViewById(R.id.fName)).getText().toString();
                 String lName = ((EditText) findViewById(R.id.lName)).getText().toString();
@@ -65,6 +69,8 @@ public class CreateProfileActivity extends AppCompatActivity {
 
                 if (Database.saveProfile(uid, fName, lName, age, view)) {
                     startActivity(new Intent(CreateProfileActivity.this, MainActivity.class));
+                    progressBar.setVisibility(View.INVISIBLE);
+                    finish();
                 }
             }
         });
