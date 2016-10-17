@@ -38,6 +38,7 @@ public class CameraFragment extends Fragment {
         System.out.println("Camera fragment call");
 
         View v = inflater.inflate(R.layout.fragment_camera, container, false);
+
         imageView = (ImageView) v.findViewById(R.id.cameraResult);
         Button button1 = (Button) v.findViewById(R.id.startCamera);
         button1.setOnClickListener(new View.OnClickListener() {

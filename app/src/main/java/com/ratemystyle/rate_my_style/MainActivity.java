@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.ratemystyle.rate_my_style.fragment.CameraFragment;
 import com.ratemystyle.rate_my_style.fragment.MainFragment;
 import com.ratemystyle.rate_my_style.fragment.ProfileFragment;
@@ -21,6 +22,7 @@ import com.ratemystyle.rate_my_style.fragment.ProfileFragment;
 import static com.ratemystyle.rate_my_style.R.id.pager;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     private static final int NUM_PAGES = 3;
     private ViewPager mPager;
 
@@ -40,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         mPager.setOffscreenPageLimit(2);
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(1);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("main");
     }
 
     @Override
