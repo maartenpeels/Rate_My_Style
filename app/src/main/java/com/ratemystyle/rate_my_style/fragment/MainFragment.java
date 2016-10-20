@@ -59,8 +59,7 @@ public class MainFragment extends Fragment {
 
         posts = new ArrayList<Post>();
 
-        listAdapter = new FeedListAdapter(getActivity(), posts);
-        listView.setAdapter(listAdapter);
+
 
         DatabaseReference mFeedReference = FirebaseDatabase.getInstance().getReference().child("posts");
 
@@ -76,6 +75,9 @@ public class MainFragment extends Fragment {
                 for (Post post : userMap.values()) {
                     posts.add(post);
                 }
+
+                listAdapter = new FeedListAdapter(getActivity(), posts);
+                listView.setAdapter(listAdapter);
             }
 
             @Override

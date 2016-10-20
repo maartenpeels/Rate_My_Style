@@ -2,12 +2,8 @@ package com.ratemystyle.rate_my_style;
 
 import android.graphics.Bitmap;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ratemystyle.rate_my_style.Models.Post;
@@ -50,23 +46,6 @@ public class Database {
     public boolean savePost(Post post) {
         mDatabase.child("posts").push().setValue(post);
         return true;
-    }
-
-    public Profile getLoggedInProfile() {
-        final Profile[] pf = new Profile[1];
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mDatabase.child("profiles").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Profile prof = dataSnapshot.getValue(Profile.class);
-                pf[0] = prof;
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        return pf[0];
     }
 
     private void uploadImgFromView(Bitmap bitmap, String uid) {
