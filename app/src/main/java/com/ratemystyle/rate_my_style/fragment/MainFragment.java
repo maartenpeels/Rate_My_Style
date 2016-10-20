@@ -7,19 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
 import com.ratemystyle.rate_my_style.FeedListAdapter;
 import com.ratemystyle.rate_my_style.Models.Post;
 import com.ratemystyle.rate_my_style.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Jean Paul on 29-9-2016.
@@ -28,7 +28,7 @@ import java.util.Map;
 public class MainFragment extends Fragment {
     private ListView listView;
     private FeedListAdapter listAdapter;
-    private List<Post> posts;
+    private HashSet<Post> posts;
 
     public static MainFragment newInstance(String text) {
 
@@ -57,27 +57,30 @@ public class MainFragment extends Fragment {
 
         listView = (ListView) getView().findViewById(R.id.listFeed);
 
-        posts = new ArrayList<Post>();
+        posts = new HashSet<>();
 
-
-
-        DatabaseReference mFeedReference = FirebaseDatabase.getInstance().getReference().child("posts");
-
-        ValueEventListener postListener = new ValueEventListener() {
+        final DatabaseReference mFeedReference = FirebaseDatabase.getInstance().getReference().child("posts");
+        ChildEventListener childListener = new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() == null)
-                    return;
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                posts.add(dataSnapshot.getValue(Post.class));
 
-                GenericTypeIndicator<Map<String, Post>> t = new GenericTypeIndicator<Map<String, Post>>() {
-                };
-                Map<String, Post> userMap = dataSnapshot.getValue(t);
-                for (Post post : userMap.values()) {
-                    posts.add(post);
-                }
+                updateList();
+            }
 
-                listAdapter = new FeedListAdapter(getActivity(), posts);
-                listView.setAdapter(listAdapter);
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
@@ -86,8 +89,15 @@ public class MainFragment extends Fragment {
             }
         };
 
-        mFeedReference.addValueEventListener(postListener);
+        mFeedReference.addChildEventListener(childListener);
+    }
 
+    private void updateList() {
+        List<Post> p = new ArrayList<Post>(posts);
+        Collections.sort(p);
+
+        listAdapter = new FeedListAdapter(getActivity(), p);
+        listView.setAdapter(listAdapter);
     }
 }
 

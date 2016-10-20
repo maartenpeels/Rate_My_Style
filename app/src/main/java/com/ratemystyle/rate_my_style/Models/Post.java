@@ -6,7 +6,7 @@ import java.util.List;
  * Created by Maarten Peels on 10/20/2016.
  */
 
-public class Post {
+public class Post implements Comparable<Post> {
     public String uid;
     public List<String> images;
     public String status;
@@ -22,5 +22,18 @@ public class Post {
         this.status = status;
         this.timeStamp = timeStamp;
         this.url = url;
+    }
+
+    @Override
+    public int compareTo(Post o) {
+        if (Long.parseLong(this.timeStamp) > Long.parseLong(o.timeStamp))//This is newer
+        {
+            return -1;
+        } else if (Long.parseLong(this.timeStamp) < Long.parseLong(timeStamp))//This is older
+        {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
