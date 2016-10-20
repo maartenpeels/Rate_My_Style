@@ -2,10 +2,12 @@ package com.ratemystyle.rate_my_style;
 
 import android.graphics.Bitmap;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.ratemystyle.rate_my_style.Models.Post;
 import com.ratemystyle.rate_my_style.Models.Profile;
 
@@ -20,6 +22,7 @@ public class Database {
     private static FirebaseStorage mStorage;
 
     private static Database db = new Database();
+    private OnImageSavedListener onImageSavedListener;
 
     private Database() {
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -48,6 +51,27 @@ public class Database {
         return true;
     }
 
+    public void setOnScoreSavedListener(OnImageSavedListener listener) {
+        onImageSavedListener = listener;
+    }
+
+    public void uploadImage(Bitmap image) {
+        StorageReference storageRef = mStorage.getReferenceFromUrl("gs://ratemystyle-99fce.appspot.com");
+        StorageReference postPicRef = storageRef.child("images");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = postPicRef.putBytes(data);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                onImageSavedListener.onImageSaved(taskSnapshot.getDownloadUrl().toString());
+            }
+        });
+    }
+
     private void uploadImgFromView(Bitmap bitmap, String uid) {
         StorageReference storageRef = mStorage.getReferenceFromUrl("gs://ratemystyle-99fce.appspot.com");
         StorageReference profilePicRef = storageRef.child("profilePics/" + uid + ".jpg");
@@ -57,5 +81,9 @@ public class Database {
         byte[] data = baos.toByteArray();
 
         profilePicRef.putBytes(data);
+    }
+
+    public interface OnImageSavedListener {
+        void onImageSaved(String url);
     }
 }
