@@ -44,6 +44,7 @@ import static com.ratemystyle.rate_my_style.R.id.extraPhoto;
 public class CameraFragment extends Fragment {
     private static final int CAMERA_REQUEST = 1888;
     String path;
+    List<String> imageUrls = new ArrayList<>();
     private ImageView imageView;
     private TextView textView;
     private Bitmap photo;
@@ -56,8 +57,7 @@ public class CameraFragment extends Fragment {
     private Button xtraPhoto;
     private Button nextPhoto;
     private Button prevPhoto;
-
-
+    private TextView countText;
 
     public static CameraFragment newInstance(String text) {
 
@@ -95,8 +95,10 @@ public class CameraFragment extends Fragment {
         System.out.println("Camera fragment call");
 
         final View layout = inflater.inflate(R.layout.fragment_camera, container, false);
-
+        countText = (TextView) layout.findViewById(R.id.countText);
+        etStatus = (EditText) layout.findViewById(R.id.addStatus);
         imageView = (ImageView) layout.findViewById(R.id.cameraResult);
+
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,6 +136,7 @@ public class CameraFragment extends Fragment {
             public void onClick(View view) {
                 if (0 < currentIndex) {
                     currentIndex += -1;
+                    countText.setText(currentIndex + 1 + "/" + pictures.size());
                     imageView.setImageBitmap(pictures.get(currentIndex));
                 }
             }
@@ -142,8 +145,9 @@ public class CameraFragment extends Fragment {
         nextPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (pictures.size() > currentIndex++) {
-                    //currentIndex++;
+                if (pictures.size() - 1 > currentIndex) {
+                    currentIndex++;
+                    countText.setText(currentIndex + 1 + "/" + pictures.size());
                     imageView.setImageBitmap(pictures.get(currentIndex));
                 }
             }
@@ -153,13 +157,26 @@ public class CameraFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+
                 if (pictureTaken) {
-                    Database.getInstance().uploadImage(photo, new Database.OnImageSavedListener() {
-                        @Override
-                        public void onImageSaved(String url) {
-                            imageUploaded(layout, url);
+                    if (etStatus.length() != 0) {
+                        for (Bitmap picture : pictures) {
+                            Database.getInstance().uploadImage(picture, new Database.OnImageSavedListener() {
+                                @Override
+                                public void onImageSaved(String url) {
+                                    imageUploaded(url);
+                                    //imageUrls.add(url);
+                                    System.out.println(url);
+                                }
+                            });
                         }
-                    });
+
+                        createPost(layout);
+                    } else {
+                        etStatus.setHintTextColor(Color.parseColor("#ff7f7f"));
+                        Toast.makeText(getActivity(), "Please add a status",
+                                Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     Toast.makeText(getActivity(), getResources().getString(R.string.choose_image), Toast.LENGTH_SHORT).show();
 
@@ -169,26 +186,30 @@ public class CameraFragment extends Fragment {
         return layout;
     }
 
-    public void imageUploaded(View v, String url) {
-        List<String> images = new ArrayList<>();
-        images.add(url);
-        etStatus = (EditText) v.findViewById(R.id.addStatus);
-        etUrl = (EditText) v.findViewById(R.id.addUrl);
+    private void imageUploaded(String url) {
+        System.out.println(url);
+        imageUrls.add(url);
+        System.out.println(imageUrls.size());
+    }
 
-        System.out.println(etStatus.length());
-        if (etStatus.length() != 0) {
-            long unixTime = System.currentTimeMillis();
-            Post post = new Post(FirebaseAuth.getInstance().getCurrentUser().getUid(), images, etStatus.getText().toString(), unixTime + "", etUrl.getText().toString());
-            Database.getInstance().savePost(post);
-            textView.setVisibility(View.VISIBLE);
-            imageView.setImageDrawable(null);
-            etStatus.setText("");
-            etUrl.setText("");
-        } else {
-            etStatus.setHintTextColor(Color.parseColor("#ff7f7f"));
-            Toast.makeText(getActivity(), "Please add a status",
-                    Toast.LENGTH_LONG).show();
-        }
+
+    public void createPost(View layout) {
+        etUrl = (EditText) layout.findViewById(R.id.addUrl);
+
+        long unixTime = System.currentTimeMillis();
+        Post post = new Post(FirebaseAuth.getInstance().getCurrentUser().getUid(), imageUrls, etStatus.getText().toString(), unixTime + "", etUrl.getText().toString());
+        Database.getInstance().savePost(post);
+        textView.setVisibility(View.VISIBLE);
+        imageView.setImageDrawable(null);
+        etStatus.setText("");
+        etUrl.setText("");
+        countText.setText("");
+        nextPhoto.setVisibility(View.GONE);
+        xtraPhoto.setVisibility(View.GONE);
+        prevPhoto.setVisibility(View.GONE);
+
+
+
 
     }
 
@@ -217,14 +238,19 @@ public class CameraFragment extends Fragment {
                 textView.setVisibility(View.GONE);
                 if (!replacePicture) {
                     pictures.add(photo);
+
                     xtraPhoto.setVisibility(View.VISIBLE);
                     nextPhoto.setVisibility(View.VISIBLE);
                     prevPhoto.setVisibility(View.VISIBLE);
+                    countText.setText(pictures.size() + "/" + pictures.size());
+                    currentIndex = pictures.size();
+                    System.out.println(currentIndex);
                 } else {
+                    pictures.remove(currentIndex);
                     pictures.add(currentIndex, photo);
+                    countText.setText(currentIndex + 1 + "/" + pictures.size());
                 }
 
-                currentIndex++;
 
                 imageView.setImageBitmap(photo);
 

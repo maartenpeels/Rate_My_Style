@@ -14,9 +14,11 @@ public class Post {
     public String url;
 
     public Post() {
+
     }
 
     public Post(String uid, List<String> images, String status, String timeStamp, String url) {
+
         this.uid = uid;
         this.images = images;
         this.status = status;
