@@ -31,9 +31,7 @@ import com.ratemystyle.rate_my_style.R;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,6 +44,7 @@ public class CameraFragment extends Fragment {
     private ImageView imageView;
     private TextView textView;
     private Bitmap photo;
+    private boolean pictureTaken = false;
     private EditText etStatus;
     private EditText etUrl;
 
@@ -99,14 +98,20 @@ public class CameraFragment extends Fragment {
         });
         Button savePost = (Button) layout.findViewById(R.id.savePost);
         savePost.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                Database.getInstance().uploadImage(photo, new Database.OnImageSavedListener() {
-                    @Override
-                    public void onImageSaved(String url) {
-                        imageUploaded(layout, url);
-                    }
-                });
+                if (pictureTaken) {
+                    Database.getInstance().uploadImage(photo, new Database.OnImageSavedListener() {
+                        @Override
+                        public void onImageSaved(String url) {
+                            imageUploaded(layout, url);
+                        }
+                    });
+                } else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.choose_image), Toast.LENGTH_SHORT).show();
+
+                }
             }
         });
         return layout;
@@ -119,15 +124,18 @@ public class CameraFragment extends Fragment {
         etUrl = (EditText) v.findViewById(R.id.addUrl);
 
         if (etStatus.getText().toString() != "") {
-            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-
-            Post post = new Post(FirebaseAuth.getInstance().getCurrentUser().getUid(), images, etStatus.getText().toString(), timeStamp, etUrl.getText().toString());
+            long unixTime = System.currentTimeMillis();
+            Post post = new Post(FirebaseAuth.getInstance().getCurrentUser().getUid(), images, etStatus.getText().toString(), unixTime + "", etUrl.getText().toString());
             Database.getInstance().savePost(post);
             textView.setVisibility(View.VISIBLE);
             imageView.setImageDrawable(null);
             etStatus.setText("");
             etUrl.setText("");
+        } else {
+            Toast.makeText(getActivity(), "Please add a status",
+                    Toast.LENGTH_LONG).show();
         }
+
     }
 
     @Override
@@ -150,6 +158,7 @@ public class CameraFragment extends Fragment {
             }
             try {
                 photo = (Bitmap) data.getExtras().get("data");
+                pictureTaken = true;
                 // photo.compress(Bitmap.CompressFormat.PNG, 100, out);
                 textView.setVisibility(View.GONE);
                 imageView.setImageBitmap(photo);

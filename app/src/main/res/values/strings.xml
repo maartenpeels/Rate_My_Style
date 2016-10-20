@@ -41,6 +41,7 @@
     <string name="press_image_to_add_a_picture">Press image to add a picture!</string>
     <string name="addStatus">Add status</string>
     <string name="addUrl">Add URL</string>
+    <string name="choose_image">First choose an image</string>
 
 
 </resources>
