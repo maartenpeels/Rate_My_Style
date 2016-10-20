@@ -66,7 +66,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                 int age = Integer.parseInt(((EditText) findViewById(R.id.age)).getText().toString());
                 ImageView view = (ImageView) findViewById(R.id.img_profile);
 
-                if (Database.saveProfile(uid, fName, lName, age, ((BitmapDrawable) view.getDrawable()).getBitmap())) {
+                if (Database.getInstance().saveProfile(uid, fName, lName, age, ((BitmapDrawable) view.getDrawable()).getBitmap())) {
                     startActivity(new Intent(CreateProfileActivity.this, MainActivity.class));
                     progressBar.setVisibility(View.INVISIBLE);
                     finish();

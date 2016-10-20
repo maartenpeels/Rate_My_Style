@@ -4,23 +4,12 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ratemystyle.rate_my_style.MainActivity">
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
+    <ListView
+        android:id="@+id/listFeed"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
-        android:text="Button" />
-
-    <ImageView
-        android:id="@+id/cameraResult"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"></ImageView>
-
+        android:layout_centerVertical="true" />
 </RelativeLayout>
