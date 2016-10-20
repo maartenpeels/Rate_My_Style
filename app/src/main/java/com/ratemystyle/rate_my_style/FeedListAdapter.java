@@ -14,12 +14,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ratemystyle.rate_my_style.Models.Post;
+import com.ratemystyle.rate_my_style.Models.Profile;
 import com.ratemystyle.rate_my_style.control.FeedImageView;
 
 import java.util.List;
@@ -66,21 +70,35 @@ public class FeedListAdapter extends BaseAdapter {
         if (imageLoader == null)
             imageLoader = FeedController.getInstance().getImageLoader();
 
-        TextView name = (TextView) convertView.findViewById(R.id.name);
+        final TextView name = (TextView) convertView.findViewById(R.id.name);
         TextView timestamp = (TextView) convertView
                 .findViewById(R.id.timestamp);
         TextView statusMsg = (TextView) convertView
                 .findViewById(R.id.txtStatusMsg);
         TextView url = (TextView) convertView.findViewById(R.id.txtUrl);
-        NetworkImageView profilePic = (NetworkImageView) convertView
+        final FeedImageView profilePic = (FeedImageView) convertView
                 .findViewById(R.id.profilePic);
         FeedImageView feedImageView = (FeedImageView) convertView
                 .findViewById(R.id.feedImage1);
 
         Post item = feedItems.get(position);
 
-        String n = Database.getInstance().getLoggedInProfile().firstName + " " + Database.getInstance().getLoggedInProfile().lastName;
-        name.setText(n);
+        DatabaseReference mPostReference = FirebaseDatabase.getInstance().getReference().child("profiles").child(item.uid);
+        ValueEventListener profileListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Profile profile = dataSnapshot.getValue(Profile.class);
+
+                String n = profile.firstName + " " + profile.lastName;
+                name.setText(n);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        mPostReference.addListenerForSingleValueEvent(profileListener);
 
         // Converting timestamp into x ago format
         CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
@@ -111,15 +129,14 @@ public class FeedListAdapter extends BaseAdapter {
         }
 
         // user profile pic
-        final String[] profilePicURI = {""};
         StorageReference profilePicRef = FirebaseStorage.getInstance().getReference().child("profilePics");
-        profilePicRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid() + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        profilePicRef.child(item.uid + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                profilePicURI[0] = uri.toString();
+                profilePic.setImageUrl(uri.toString(), imageLoader);
             }
         });
-        profilePic.setImageUrl(profilePicURI[0], imageLoader);
+
 
         // Feed image
         if (item.images.size() > 0) {
