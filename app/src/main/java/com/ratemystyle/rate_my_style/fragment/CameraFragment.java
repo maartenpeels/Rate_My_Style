@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -34,6 +35,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ratemystyle.rate_my_style.R.id.extraPhoto;
+
 /**
  * Created by Jean Paul on 13-10-2016.
  */
@@ -47,6 +50,13 @@ public class CameraFragment extends Fragment {
     private boolean pictureTaken = false;
     private EditText etStatus;
     private EditText etUrl;
+    private ArrayList<Bitmap> pictures = new ArrayList<>();
+    private int currentIndex = -1;
+    private boolean replacePicture = false;
+    private Button xtraPhoto;
+    private Button nextPhoto;
+    private Button prevPhoto;
+
 
 
     public static CameraFragment newInstance(String text) {
@@ -87,13 +97,55 @@ public class CameraFragment extends Fragment {
         final View layout = inflater.inflate(R.layout.fragment_camera, container, false);
 
         imageView = (ImageView) layout.findViewById(R.id.cameraResult);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), getResources().getString(R.string.hold_imageview), Toast.LENGTH_SHORT).show();
+            }
+        });
+        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                replacePicture = true;
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                return false;
+            }
+        });
         textView = (TextView) layout.findViewById(R.id.takePictureText);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                System.out.println("test10");
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            }
+        });
+        xtraPhoto = (Button) layout.findViewById(extraPhoto);
+        xtraPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            }
+        });
+        prevPhoto = (Button) layout.findViewById(R.id.previousPhoto);
+        prevPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (0 < currentIndex) {
+                    currentIndex += -1;
+                    imageView.setImageBitmap(pictures.get(currentIndex));
+                }
+            }
+        });
+        nextPhoto = (Button) layout.findViewById(R.id.nextPhoto);
+        nextPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (pictures.size() > currentIndex++) {
+                    //currentIndex++;
+                    imageView.setImageBitmap(pictures.get(currentIndex));
+                }
             }
         });
         Button savePost = (Button) layout.findViewById(R.id.savePost);
@@ -123,7 +175,8 @@ public class CameraFragment extends Fragment {
         etStatus = (EditText) v.findViewById(R.id.addStatus);
         etUrl = (EditText) v.findViewById(R.id.addUrl);
 
-        if (etStatus.getText().toString() != "") {
+        System.out.println(etStatus.length());
+        if (etStatus.length() != 0) {
             long unixTime = System.currentTimeMillis();
             Post post = new Post(FirebaseAuth.getInstance().getCurrentUser().getUid(), images, etStatus.getText().toString(), unixTime + "", etUrl.getText().toString());
             Database.getInstance().savePost(post);
@@ -132,6 +185,7 @@ public class CameraFragment extends Fragment {
             etStatus.setText("");
             etUrl.setText("");
         } else {
+            etStatus.setHintTextColor(Color.parseColor("#ff7f7f"));
             Toast.makeText(getActivity(), "Please add a status",
                     Toast.LENGTH_LONG).show();
         }
@@ -161,7 +215,19 @@ public class CameraFragment extends Fragment {
                 pictureTaken = true;
                 // photo.compress(Bitmap.CompressFormat.PNG, 100, out);
                 textView.setVisibility(View.GONE);
+                if (!replacePicture) {
+                    pictures.add(photo);
+                    xtraPhoto.setVisibility(View.VISIBLE);
+                    nextPhoto.setVisibility(View.VISIBLE);
+                    prevPhoto.setVisibility(View.VISIBLE);
+                } else {
+                    pictures.add(currentIndex, photo);
+                }
+
+                currentIndex++;
+
                 imageView.setImageBitmap(photo);
+
 
                 // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
                 //Uri tempUri = getImageUri(getApplicationContext(), photo);
