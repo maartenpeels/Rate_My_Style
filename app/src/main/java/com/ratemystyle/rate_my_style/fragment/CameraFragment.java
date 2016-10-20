@@ -1,23 +1,40 @@
 package com.ratemystyle.rate_my_style.fragment;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.ratemystyle.rate_my_style.Database;
+import com.ratemystyle.rate_my_style.Models.Post;
 import com.ratemystyle.rate_my_style.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Jean Paul on 13-10-2016.
@@ -27,6 +44,11 @@ public class CameraFragment extends Fragment {
     private static final int CAMERA_REQUEST = 1888;
     String path;
     private ImageView imageView;
+    private TextView textView;
+    private Bitmap photo;
+    private EditText etStatus;
+    private EditText etUrl;
+
 
     public static CameraFragment newInstance(String text) {
 
@@ -39,87 +61,124 @@ public class CameraFragment extends Fragment {
         return f;
     }
 
+    public static void deleteFileFromMediaStore(final ContentResolver contentResolver, final File file) {
+        String canonicalPath;
+        try {
+            canonicalPath = file.getCanonicalPath();
+        } catch (IOException e) {
+            canonicalPath = file.getAbsolutePath();
+        }
+        final Uri uri = MediaStore.Files.getContentUri("external");
+        final int result = contentResolver.delete(uri,
+                MediaStore.Files.FileColumns.DATA + "=?", new String[]{canonicalPath});
+        if (result == 0) {
+            final String absolutePath = file.getAbsolutePath();
+            if (!absolutePath.equals(canonicalPath)) {
+                contentResolver.delete(uri,
+                        MediaStore.Files.FileColumns.DATA + "=?", new String[]{absolutePath});
+            }
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         System.out.println("Camera fragment call");
 
-        View v = inflater.inflate(R.layout.fragment_camera, container, false);
+        final View layout = inflater.inflate(R.layout.fragment_camera, container, false);
 
-        imageView = (ImageView) v.findViewById(R.id.cameraResult);
-        Button button1 = (Button) v.findViewById(R.id.startCamera);
-        button1.setOnClickListener(new View.OnClickListener() {
+        imageView = (ImageView) layout.findViewById(R.id.cameraResult);
+        textView = (TextView) layout.findViewById(R.id.takePictureText);
+        textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File mediaFile = new File(Environment.getDataDirectory(), "DYLMS");
-                mediaFile.mkdirs();
-                File file = new File(mediaFile, "tempImg.png");
-                path = file.getPath();
-                file.mkdirs();
-
-                Uri outputFileUri = Uri.fromFile(file);
-                System.out.println(outputFileUri);
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                System.out.println("test10");
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
-
-
             }
         });
-
-        return v;
+        Button savePost = (Button) layout.findViewById(R.id.savePost);
+        savePost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Database.getInstance().uploadImage(photo, new Database.OnImageSavedListener() {
+                    @Override
+                    public void onImageSaved(String url) {
+                        imageUploaded(layout, url);
+                    }
+                });
+            }
+        });
+        return layout;
     }
 
+    public void imageUploaded(View v, String url) {
+        List<String> images = new ArrayList<>();
+        images.add(url);
+        etStatus = (EditText) v.findViewById(R.id.addStatus);
+        etUrl = (EditText) v.findViewById(R.id.addUrl);
+
+        if (etStatus.getText().toString() != "") {
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+
+            Post post = new Post(FirebaseAuth.getInstance().getCurrentUser().getUid(), images, etStatus.getText().toString(), timeStamp, etUrl.getText().toString());
+            Database.getInstance().savePost(post);
+            textView.setVisibility(View.VISIBLE);
+            imageView.setImageDrawable(null);
+            etStatus.setText("");
+            etUrl.setText("");
+        }
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+
+            int permissionCheck = ContextCompat.checkSelfPermission(this.getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
+
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this.getActivity(),
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        1);
+            }
+            int permissionCheckAgain = ContextCompat.checkSelfPermission(this.getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
+
+            if (permissionCheckAgain == PackageManager.PERMISSION_DENIED) {
+                Toast.makeText(getActivity(), "Couldn't save image",
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
             try {
-                System.out.println("Test");
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-
-
-                //String destFolder = getCacheDir().getAbsolutePath();
-
-                FileOutputStream out = null;
-
-                out = new FileOutputStream(path);
-
+                photo = (Bitmap) data.getExtras().get("data");
                 // photo.compress(Bitmap.CompressFormat.PNG, 100, out);
+                textView.setVisibility(View.GONE);
                 imageView.setImageBitmap(photo);
 
-                //Delete the image from standard image libary
-                //File image = new File(path);
-                //image.delete();
+                // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+                //Uri tempUri = getImageUri(getApplicationContext(), photo);
 
+                // CALL THIS METHOD TO GET THE ACTUAL PATH
+                //File finalFile = new File(getRealPathFromURI(tempUri));
+                //TODO Delete file from image libary
+                //deleteFileFromMediaStore(getContext().getContentResolver(), finalFile);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-    /**
-     * Gets the last image id from the media store
-     * @return
-     */
-//        private int getLastImageId(){
-//            final String[] imageColumns = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA };
-//            final String imageOrderBy = MediaStore.Images.Media._ID+" DESC";
-//            Cursor imageCursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy);
-//            if(imageCursor.moveToFirst()){
-//                int id = imageCursor.getInt(imageCursor.getColumnIndex(MediaStore.Images.Media._ID));
-//                String fullPath = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.Media.DATA));
-//                //Log.d(TAG, "getLastImageId::id " + id);
-//              //  Log.d(TAG, "getLastImageId::path " + fullPath);
-//                imageCursor.close();
-//                return id;
-//            }else{
-//                return 0;
-//            }
-//        }
-//        private void removeImage(int id) {
-//            ContentResolver cr = getContentResolver();
-//        cr.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MediaStore.Images.Media._ID + "=?", new String[]{ Long.toString(id) } );
-//    }
 
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
+    }
 }
+

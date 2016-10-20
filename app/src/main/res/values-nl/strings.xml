@@ -33,7 +33,11 @@
     <string name="pref_ringtone_silent">Stil</string>
     <string name="save">OPSLAAN</string>
     <string name="press_image_to_select_a_profile_picture">Klik op plaatje om een profiel foto te selecteren!</string>
+    <string name="press_image_to_add_a_picture">Klik op plaatje om een foto te maken!</string>
     <string name="last_name">Achternaam</string>
     <string name="first_name">Voornaam</string>
     <string name="age">Leeftijd</string>
+    <string name="savePost">Post opslaan</string>
+    <string name="addStatus">Voeg status toe</string>
+    <string name="addUrl">Voeg link toe</string>
 </resources>
