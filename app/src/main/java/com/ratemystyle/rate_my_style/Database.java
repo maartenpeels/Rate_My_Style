@@ -55,7 +55,7 @@ public class Database {
         onImageSavedListener = listener;
     }
 
-    public void uploadImage(Bitmap image) {
+    public void uploadImage(Bitmap image, final OnImageSavedListener listener) {
         StorageReference storageRef = mStorage.getReferenceFromUrl("gs://ratemystyle-99fce.appspot.com");
         StorageReference postPicRef = storageRef.child("images");
 
@@ -67,7 +67,7 @@ public class Database {
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                onImageSavedListener.onImageSaved(taskSnapshot.getDownloadUrl().toString());
+                listener.onImageSaved(taskSnapshot.getDownloadUrl().toString());
             }
         });
     }

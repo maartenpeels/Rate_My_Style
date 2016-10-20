@@ -2,6 +2,7 @@ package com.ratemystyle.rate_my_style;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -14,12 +15,15 @@ import android.view.MenuItem;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.ratemystyle.rate_my_style.fragment.CameraFragment;
 import com.ratemystyle.rate_my_style.fragment.MainFragment;
 import com.ratemystyle.rate_my_style.fragment.ProfileFragment;
 
+import java.io.File;
+
 import static com.ratemystyle.rate_my_style.R.id.pager;
+
+//import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -29,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        createFolder();
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -42,9 +46,20 @@ public class MainActivity extends AppCompatActivity {
         mPager.setOffscreenPageLimit(2);
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(1);
+        //FirebaseMessaging.getInstance().subscribeToTopic("main");
 
-        FirebaseMessaging.getInstance().subscribeToTopic("main");
+
     }
+
+    private void createFolder() {
+        File folder = new File(Environment.getExternalStorageDirectory() +
+                File.separator + "DYLMS");
+        System.out.println("folder created: " + folder.getAbsolutePath());
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -110,5 +125,6 @@ public class MainActivity extends AppCompatActivity {
             return NUM_PAGES;
         }
     }
+
 }
 
