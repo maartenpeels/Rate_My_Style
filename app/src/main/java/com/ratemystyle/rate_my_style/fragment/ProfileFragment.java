@@ -70,7 +70,7 @@ public class ProfileFragment extends Fragment {
         DatabaseReference mPostReference = FirebaseDatabase.getInstance().getReference().child("profiles").child(uid);
         StorageReference profilePicRef = FirebaseStorage.getInstance().getReference().child("profilePics");
 
-        ValueEventListener postListener = new ValueEventListener() {
+        ValueEventListener profileListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Profile profile = dataSnapshot.getValue(Profile.class);
@@ -83,7 +83,7 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadProfile:onCancelled", databaseError.toException());
+
             }
         };
 
@@ -94,6 +94,8 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        mPostReference.addValueEventListener(postListener);
+        mPostReference.addValueEventListener(profileListener);
+
+
     }
 }

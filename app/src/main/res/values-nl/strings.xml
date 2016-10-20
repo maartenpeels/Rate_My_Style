@@ -31,4 +31,9 @@
     <string name="pref_title_vibrate">Trillen</string>
     <string name="title_activity_settings">Instellingen</string>
     <string name="pref_ringtone_silent">Stil</string>
+    <string name="save">OPSLAAN</string>
+    <string name="press_image_to_select_a_profile_picture">Klik op plaatje om een profiel foto te selecteren!</string>
+    <string name="last_name">Achternaam</string>
+    <string name="first_name">Voornaam</string>
+    <string name="age">Leeftijd</string>
 </resources>
