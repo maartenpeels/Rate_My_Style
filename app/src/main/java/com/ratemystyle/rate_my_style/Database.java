@@ -12,6 +12,8 @@ import com.ratemystyle.rate_my_style.Models.Post;
 import com.ratemystyle.rate_my_style.Models.Profile;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -23,7 +25,6 @@ public class Database {
     private static DatabaseReference mDatabase;
     private static FirebaseStorage mStorage;
     private static Database db = new Database();
-    private OnImageSavedListener onImageSavedListener;
 
     private Database() {
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -52,32 +53,30 @@ public class Database {
         return true;
     }
 
-    public void setOnScoreSavedListener(OnImageSavedListener listener) {
-        onImageSavedListener = listener;
-    }
-
-    public void uploadImage(Bitmap image, final OnImageSavedListener listener) {
+    public void uploadMultipleImages(final List<Bitmap> images, final OnImagesSavedListener listener) {
         StorageReference storageRef = mStorage.getReferenceFromUrl("gs://ratemystyle-99fce.appspot.com");
+        final List<String> imageUrls = new ArrayList<>();
 
-        long now = System.currentTimeMillis();
-        long lastTime = LAST_TIME_MS.get();
-        if (lastTime >= now)
-            now = lastTime + 1;
-        if (LAST_TIME_MS.compareAndSet(lastTime, now)) ;
+        for (int i = 0; i < images.size(); i++) {
+            StorageReference postPicRef = storageRef.child("images/" + id.get() + ".jpg");
 
-        StorageReference postPicRef = storageRef.child("images/" + now + ".jpg");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            images.get(i).compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+            UploadTask uploadTask = postPicRef.putBytes(data);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    imageUrls.add(taskSnapshot.getDownloadUrl().toString());
 
-        UploadTask uploadTask = postPicRef.putBytes(data);
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                listener.onImageSaved(taskSnapshot.getDownloadUrl().toString());
-            }
-        });
+                    if (imageUrls.size() == images.size())//Als alles geupload is..
+                    {
+                        listener.onImagesSaved(imageUrls);
+                    }
+                }
+            });
+        }
     }
 
     private void uploadImgFromView(Bitmap bitmap, String uid) {
@@ -91,7 +90,18 @@ public class Database {
         profilePicRef.putBytes(data);
     }
 
-    public interface OnImageSavedListener {
-        void onImageSaved(String url);
+    public interface OnImagesSavedListener {
+        void onImagesSaved(List<String> url);
+    }
+
+    public static class id {
+        static String s4() {
+            return Integer.toString((int) Math.floor((1 + Math.random()) * 0x10000), 16).substring(1);
+        }
+
+        public static String get() {
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                    s4() + '-' + s4() + s4() + s4();
+        }
     }
 }

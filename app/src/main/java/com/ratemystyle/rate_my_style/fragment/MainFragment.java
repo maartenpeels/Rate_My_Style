@@ -63,8 +63,9 @@ public class MainFragment extends Fragment {
         ChildEventListener childListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                posts.add(dataSnapshot.getValue(Post.class));
+                Post p = dataSnapshot.getValue(Post.class);
 
+                posts.add(p);
                 updateList();
             }
 
@@ -93,7 +94,7 @@ public class MainFragment extends Fragment {
     }
 
     private void updateList() {
-        List<Post> p = new ArrayList<Post>(posts);
+        List<Post> p = new ArrayList<>(posts);
         Collections.sort(p);
 
         listAdapter = new FeedListAdapter(getActivity(), p);

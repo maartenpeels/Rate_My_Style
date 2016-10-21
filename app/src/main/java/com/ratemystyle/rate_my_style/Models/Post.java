@@ -7,6 +7,7 @@ import java.util.List;
  */
 
 public class Post implements Comparable<Post> {
+    public String imgId;
     public String uid;
     public List<String> images;
     public String status;
@@ -18,7 +19,6 @@ public class Post implements Comparable<Post> {
     }
 
     public Post(String uid, List<String> images, String status, String timeStamp, String url) {
-
         this.uid = uid;
         this.images = images;
         this.status = status;

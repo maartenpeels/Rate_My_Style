@@ -157,21 +157,15 @@ public class CameraFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-
                 if (pictureTaken) {
                     if (etStatus.length() != 0) {
-                        for (Bitmap picture : pictures) {
-                            Database.getInstance().uploadImage(picture, new Database.OnImageSavedListener() {
-                                @Override
-                                public void onImageSaved(String url) {
-                                    imageUploaded(url);
-                                    //imageUrls.add(url);
-                                    System.out.println(url);
-                                }
-                            });
-                        }
-
-                        createPost(layout);
+                        Database.getInstance().uploadMultipleImages(pictures, new Database.OnImagesSavedListener() {
+                            @Override
+                            public void onImagesSaved(List<String> urls) {
+                                imageUrls = urls;
+                                createPost(layout);
+                            }
+                        });
                     } else {
                         etStatus.setHintTextColor(Color.parseColor("#ff7f7f"));
                         Toast.makeText(getActivity(), "Please add a status",
@@ -185,13 +179,6 @@ public class CameraFragment extends Fragment {
         });
         return layout;
     }
-
-    private void imageUploaded(String url) {
-        System.out.println(url);
-        imageUrls.add(url);
-        System.out.println(imageUrls.size());
-    }
-
 
     public void createPost(View layout) {
         etUrl = (EditText) layout.findViewById(R.id.addUrl);
@@ -207,10 +194,6 @@ public class CameraFragment extends Fragment {
         nextPhoto.setVisibility(View.GONE);
         xtraPhoto.setVisibility(View.GONE);
         prevPhoto.setVisibility(View.GONE);
-
-
-
-
     }
 
     @Override
@@ -234,7 +217,6 @@ public class CameraFragment extends Fragment {
             try {
                 photo = (Bitmap) data.getExtras().get("data");
                 pictureTaken = true;
-                // photo.compress(Bitmap.CompressFormat.PNG, 100, out);
                 textView.setVisibility(View.GONE);
                 if (!replacePicture) {
                     pictures.add(photo);
