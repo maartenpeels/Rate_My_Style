@@ -8,9 +8,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="10dp"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="center"
         android:layout_weight="0.36"
         android:orientation="horizontal">
+
 
         <TextView
             android:id="@+id/takePictureText"
@@ -36,6 +38,53 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:layout_weight="0.05"
+        android:orientation="horizontal">
+
+        <Button
+        android:id="@+id/previousPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="0.33"
+        android:background="@mipmap/ic_previous"
+        android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/countText"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="" />
+
+        <Button
+        android:id="@+id/extraPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_weight="0.33"
+        android:background="@mipmap/ic_plus"
+        android:text=""
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/nextPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_weight="0.33"
+        android:background="@mipmap/ic_next"
+        android:text=""
+        android:visibility="gone" />
+
+    </LinearLayout>
+
     <EditText
         android:id="@+id/addStatus"
         android:layout_width="match_parent"
@@ -46,7 +95,9 @@
         android:id="@+id/addUrl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/addUrl" />
+        android:hint="@string/addUrl"
+        android:includeFontPadding="true"
+        android:inputType="textWebEmailAddress" />
 
     <Button
         android:id="@+id/savePost"

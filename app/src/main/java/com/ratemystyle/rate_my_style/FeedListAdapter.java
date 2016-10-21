@@ -139,12 +139,15 @@ public class FeedListAdapter extends BaseAdapter {
 
 
         // Feed image
-        if (item.images.size() > 0) {
-            feedImageView.setImageUrl(item.images.get(0), imageLoader);
-            feedImageView.setVisibility(View.VISIBLE);
-        } else {
-            feedImageView.setVisibility(View.GONE);
+        if (item.images != null) {
+            if (item.images.size() > 0) {
+                feedImageView.setImageUrl(item.images.get(0), imageLoader);
+                feedImageView.setVisibility(View.VISIBLE);
+            } else {
+                feedImageView.setVisibility(View.GONE);
+            }
         }
+
 
         return convertView;
     }

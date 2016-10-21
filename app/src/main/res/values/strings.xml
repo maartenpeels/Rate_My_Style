@@ -42,6 +42,7 @@
     <string name="addStatus">Add status</string>
     <string name="addUrl">Add URL</string>
     <string name="choose_image">First choose an image</string>
+    <string name="hold_imageview">Hold image to make a new picture</string>
 
 
 </resources>

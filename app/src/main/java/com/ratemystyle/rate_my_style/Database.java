@@ -12,15 +12,16 @@ import com.ratemystyle.rate_my_style.Models.Post;
 import com.ratemystyle.rate_my_style.Models.Profile;
 
 import java.io.ByteArrayOutputStream;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by Maarten Peels on 10/14/2016.
  */
 
 public class Database {
+    private static final AtomicLong LAST_TIME_MS = new AtomicLong();
     private static DatabaseReference mDatabase;
     private static FirebaseStorage mStorage;
-
     private static Database db = new Database();
     private OnImageSavedListener onImageSavedListener;
 
@@ -57,7 +58,14 @@ public class Database {
 
     public void uploadImage(Bitmap image, final OnImageSavedListener listener) {
         StorageReference storageRef = mStorage.getReferenceFromUrl("gs://ratemystyle-99fce.appspot.com");
-        StorageReference postPicRef = storageRef.child("images");
+
+        long now = System.currentTimeMillis();
+        long lastTime = LAST_TIME_MS.get();
+        if (lastTime >= now)
+            now = lastTime + 1;
+        if (LAST_TIME_MS.compareAndSet(lastTime, now)) ;
+
+        StorageReference postPicRef = storageRef.child("images/" + now + ".jpg");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
